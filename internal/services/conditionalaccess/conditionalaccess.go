@@ -30,6 +30,19 @@ func flattenConditionalAccessConditionSet(in *msgraph.ConditionalAccessCondition
 	}
 }
 
+func flattenConditionalAccessApplicationFilter(in *msgraph.ConditionalAccessFilter) []interface{} {
+	if in == nil {
+		return []interface{}{}
+	}
+
+	return []interface{}{
+		map[string]interface{}{
+			"mode": in.Mode,
+			"rule": in.Rule,
+		},
+	}
+}
+
 func flattenConditionalAccessApplications(in *msgraph.ConditionalAccessApplications) []interface{} {
 	if in == nil {
 		return []interface{}{}
@@ -39,6 +52,7 @@ func flattenConditionalAccessApplications(in *msgraph.ConditionalAccessApplicati
 		map[string]interface{}{
 			"included_applications": tf.FlattenStringSlicePtr(in.IncludeApplications),
 			"excluded_applications": tf.FlattenStringSlicePtr(in.ExcludeApplications),
+			"application_filter":    flattenConditionalAccessApplicationFilter(in.ApplicationFilter),
 			"included_user_actions": tf.FlattenStringSlicePtr(in.IncludeUserActions),
 		},
 	}
@@ -338,10 +352,12 @@ func expandConditionalAccessApplications(in []interface{}) *msgraph.ConditionalA
 
 	includeApplications := config["included_applications"].([]interface{})
 	excludeApplications := config["excluded_applications"].([]interface{})
+	applicationFilter := config["application_filter"].([]interface{})
 	includeUserActions := config["included_user_actions"].([]interface{})
 
 	result.IncludeApplications = tf.ExpandStringSlicePtr(includeApplications)
 	result.ExcludeApplications = tf.ExpandStringSlicePtr(excludeApplications)
+	result.ApplicationFilter = expandConditionalAccessFilter(applicationFilter)
 	result.IncludeUserActions = tf.ExpandStringSlicePtr(includeUserActions)
 
 	return &result
