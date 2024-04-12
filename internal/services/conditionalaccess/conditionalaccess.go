@@ -357,7 +357,9 @@ func expandConditionalAccessApplications(in []interface{}) *msgraph.ConditionalA
 
 	result.IncludeApplications = tf.ExpandStringSlicePtr(includeApplications)
 	result.ExcludeApplications = tf.ExpandStringSlicePtr(excludeApplications)
-	result.ApplicationFilter = expandConditionalAccessFilter(applicationFilter)
+	if len(applicationFilter) > 0 {
+		result.ApplicationFilter = expandConditionalAccessFilter(applicationFilter)
+	}
 	result.IncludeUserActions = tf.ExpandStringSlicePtr(includeUserActions)
 
 	return &result

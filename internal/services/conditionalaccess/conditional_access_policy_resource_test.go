@@ -359,11 +359,7 @@ resource "azuread_conditional_access_policy" "test" {
     user_risk_levels    = ["medium"]
 
     applications {
-      included_applications = ["None"]
-	  application_filter {
-        mode = "include"
-        rule = ""application.AppGroup eq \"Corp\"""
-      }
+      included_applications = ["All"]
       excluded_applications = []
     }
 
